@@ -25,7 +25,21 @@
 #ifdef __EMSCRIPTEN__
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
-
+#include <string>
+#include <vector>
+#include <regex>
+std::vector<std::string> users;
+int count = 0;
+int numDisplays = 4;
+static int currentTabIndex = 0; // Currently selected tab index
+void GetAuthLog();
+void GetSudoers();
+void DisplaySudoers();
+void DisplayAuthLog();
+void ImGuiSimpleTabBar();
+void SwitchTabs();
+int width = 1280;
+int height = 720;
 // Main code
 int main(int, char**)
 {
@@ -70,7 +84,7 @@ int main(int, char**)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Window* window = SDL_CreateWindow("LogGui", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    SDL_Window* window = SDL_CreateWindow("LogGui", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, window_flags);
     if (window == nullptr)
     {
         printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
@@ -112,12 +126,13 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != nullptr);
+    
 
-    // Our state
-    bool show_demo_window = false;
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
+    
+    GetSudoers();
+    GetAuthLog();
+    //ImGui::SetNextWindowSize(ImVec2(window.width(), height));
     // Main loop
     bool done = false;
 #ifdef __EMSCRIPTEN__
@@ -149,34 +164,19 @@ int main(int, char**)
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::Begin("LogGui");
+            ImGui::SetWindowSize(ImVec2(width, height));
+            ImGui::SetWindowPos(ImVec2(0,0));
+            ImGuiSimpleTabBar();
+            SwitchTabs();
             ImGui::End();
+            //DisplaySudoers();
+            //DisplayAuthLog();
         }
-        logins_window();
-        flag_window();
+        //logins_window();
+        //flag_window();
 
 
         // Rendering
@@ -201,4 +201,178 @@ int main(int, char**)
     SDL_Quit();
 
     return 0;
+}
+
+void ImGuiSimpleTabBar() {
+  if (numDisplays <= 0) {
+    return;
+  }
+
+  const bool isOpen = ImGui::BeginTabBar("##SimpleTabBar");
+  if (!isOpen) {
+    return;
+  }
+
+  const char* tabLabels[5] = {"Tab 1", "Tab 2", "Tab 3", "Tab 4", "Tab 5"}; // Adjust labels and array size
+  for (int i = 0; i < numDisplays; i++) {
+    const bool isSelected = (currentTabIndex == i);
+    if (ImGui::TabItemButton(tabLabels[i], isSelected)) {
+      currentTabIndex = i;
+    }
+  }
+
+  ImGui::EndTabBar();
+}
+
+void GetSudoers()
+{
+    FILE* sudoers_file = fopen("/etc/sudoers", "r");
+    if(!sudoers_file)
+    {
+        ImGui::Text("Failed to open /etc/sudoers");
+        ImGui::End();
+        return;
+    }
+
+    char line[256];
+    while (fgets(line, sizeof(line), sudoers_file))
+    {
+        line[strcspn(line, "\n")] = '\0';
+
+        if(line[0] == '#' || strlen(line) == 0)
+        {
+            continue;
+        }
+
+        // Tokenize using strtok with a copy of the line
+        char *token = strtok(strdup(line), " "); // Create and tokenize a copy
+        while (token)
+        {
+            users.push_back(std::string(token)); // Store token as a string in vector
+            token = strtok(NULL, " ");           // Subsequent tokens from the same copy
+        }
+        if(!token)
+        {
+            continue;
+        }
+        //ImGui::Text("Not Authorized %s", user);
+        
+        //ImGui::NewLine();
+        //DisplayAuthLog();
+        count++;
+    }        
+    fclose (sudoers_file);
+}
+
+void DisplaySudoers()
+{
+    //ImGui::Begin("Sudoers");
+    ImGui::BeginChild("Sudo");
+  // Print authorized users
+  for (const std::string& user : users) {
+    ImGui::Text("Authorized: %s", user.c_str());
+  }
+    ImGui::EndChild();
+    //DisplayAuthLog();
+    //ImGui::End();
+}
+
+struct LogEntry
+{
+    std::string timestamp;
+    std::string username; 
+    std::string message;
+};
+
+
+
+std::vector<LogEntry> LogEntries;
+// Store recent log entries
+std::vector<std::string> log_entries;
+
+void GetAuthLog()
+{
+    FILE *log_file = fopen("/var/log/auth.log", "r");
+        if (!log_file)
+        {
+            ImGui::Text("Failed to open /var/log/auth.log");
+            ImGui::End();
+            return;
+        }
+        // Regular expression for sudo attempts (improve based on your needs)
+        const std::regex sudo_regex(R"(.*sudo.*)");
+
+        // Read lines from the end of the file
+        char line[256];
+        while (fgets(line, sizeof(line), log_file))
+        {
+            // Remove trailing newline
+            line[strcspn(line, "\n")] = '\0';
+
+            // Skip comments and empty lines
+            if (line[0] == '#' || strlen(line) == 0)
+            {
+                continue;
+            }
+
+            // Search for sudo using regex
+            if (std::regex_search(line, sudo_regex))
+            {
+                log_entries.push_back(std::string(line));
+            }
+        }
+
+        fclose(log_file);
+
+}
+void DisplayAuthLog()
+{
+    //ImGui::Begin("Auth Log");
+
+  // Setup scrollable area
+    ImGui::BeginChild("SudoLogList", ImVec2(0, 150), false, ImGuiWindowFlags_HorizontalScrollbar);
+
+  // Display entries in reverse order
+  for (int i = log_entries.size() - 1; i >= 0; i--) {
+    const std::string& log_line = log_entries[i];
+
+    // Basic parsing (improve parsing logic for better formatting)
+    std::string formatted_message = log_line;
+    size_t first_colon = log_line.find(':');
+    if (first_colon != std::string::npos) {
+      //formatted_message = fmt::format(
+      //    "(%zu) %s - %s", i + 1, log_line.substr(0, first_colon).c_str(), log_line.substr(first_colon + 1).c_str());
+        ImGui::Text( "%s - %s", log_line.substr(0, first_colon).c_str(), log_line.substr(first_colon + 1).c_str());
+    }
+
+
+  }
+
+  ImGui::EndChild();
+  //ImGui::End();
+    
+}
+
+void SwitchTabs()
+{
+    //ImGui::Begin("LogGui");
+    switch (currentTabIndex)
+    {
+    case 0:
+        DisplaySudoers();
+        break;
+    
+    case 1:
+        DisplayAuthLog();
+        break;
+    case 2:
+        logins_window();
+        break;
+    case 3:
+        flag_window();
+        break;
+    default:
+        break;
+    }
+    //ImGui::End();
 }

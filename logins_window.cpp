@@ -20,8 +20,8 @@ void logins_window(){
     ifstream log;
     //log.open("/var/log/auth.log");
     log.open("examplelog.txt");
-    ImGui::Begin("logins window!");
-    ImGui::SetWindowSize(ImVec2(500,200));
+    ImGui::BeginChild("logins window!");
+    //ImGui::SetWindowSize(ImVec2(500,200));
 
     int flag_count = 1;
     string month;
@@ -69,7 +69,7 @@ void logins_window(){
     ImGui::Text("Total Failed Login Attempts: %i", failed_count);
 
     log.close();
-    ImGui::End();
+    ImGui::EndChild();
 }
 
 

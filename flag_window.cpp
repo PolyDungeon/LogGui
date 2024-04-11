@@ -18,8 +18,8 @@ using namespace std;
 void flag_window(){
     ifstream log;
     log.open("/var/log/auth.log");
-    ImGui::Begin("flag window!");
-    ImGui::SetWindowSize(ImVec2(600,700));
+    ImGui::BeginChild("flag window!");
+    //ImGui::SetWindowSize(ImVec2(600,700));
 
     int flag_count = 1;
     string month;
@@ -73,7 +73,7 @@ void flag_window(){
         }
     }
     log.close();
-    ImGui::End();
+    ImGui::EndChild();
 }
 
 
