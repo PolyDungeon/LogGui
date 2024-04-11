@@ -14,8 +14,8 @@
 #CXX = g++
 #CXX = clang++
 
-EXE = example_sdl2_opengl3
-IMGUI_DIR = /home/lfry/Documents/CPSC4240/LogGui/imgui
+EXE = LogGui
+IMGUI_DIR = /home/dhcopel/Documents/CPSC4240/LogGui/imgui
 SOURCES = main.cpp
 SOURCES += flag_window.cpp logins_window.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp

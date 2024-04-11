@@ -56,5 +56,8 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
-  "cmake.sourceDirectory": "/home/lfry/Documents/CPSC 4240/LogGui/imgui/examples/example_android_opengl3"
+  "cmake.sourceDirectory": "/home/dhcopel/Documents/CPSC 4240/LogGui/imgui/examples/example_android_opengl3",
+  "files.associations": {
+    "*.tcc": "cpp"
+  }
 }
