@@ -23,16 +23,16 @@ void authevents_window(){
     ImGui::Begin("Auth Events window!");
     ImGui::SetWindowSize(ImVec2(1000,300));
 
-    int flag_count = 1;
     string month;
     string day;
     string time_stamp;
     string name;
     string command;
     string rest_of_line;
-
+    int lines = 0 ;
     if(log.is_open()){
         while(!log.eof()){
+            lines++;
             log >> month;
             log >> day;
             log >> time_stamp;
@@ -44,17 +44,10 @@ void authevents_window(){
                 string user;
                 getline(log, rest_of_line); // Read the entire line after the command
 
-                // Extract the username from the line
-                size_t found = rest_of_line.find_last_of(']');
-                user = rest_of_line.substr(0, found + 1);
 
-                int found_eq = rest_of_line.find_last_of('=');
-                command = rest_of_line.substr(found_eq + 1);
-
-                string h = time_stamp.substr(0,2);
-                int hour = stoi(h);
                 
-                ImGui::Text("User: %s changed their password (%s)", user.c_str(), command.c_str());
+                ImGui::Text("Line Number %d: On %s %s at %s User %s changed their password (%s)",lines,month.c_str(),day.c_str(), time_stamp.c_str(),name.c_str(), command.c_str());
+                ImGui::Text("Month: %s, Day: %s, Time: %s, Name: %s, Command: %s",month.c_str(),day.c_str(),time_stamp.c_str(),name.c_str(),command.c_str());
                 }
                 
             
