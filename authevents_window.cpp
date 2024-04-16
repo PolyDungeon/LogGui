@@ -19,6 +19,7 @@ using namespace std;
 
 void authevents_window(){
     ifstream log;
+    int authCount = 0;
     log.open("/var/log/auth.log");
     ImGui::BeginChild("Auth Events window!");
     ImGui::SetWindowSize(ImVec2(1050,800));
@@ -30,6 +31,7 @@ void authevents_window(){
     string command;
     string rest_of_line;
     int lines = 0 ;
+    
     int hourCount[24] = {0};
     if(log.is_open()){
         while(!log.eof()){
@@ -74,7 +76,7 @@ void authevents_window(){
             
             
         }
-        int authCount = 0;
+
         for(int i = 0; i < 23; i++){
 
             authCount+= hourCount[i];

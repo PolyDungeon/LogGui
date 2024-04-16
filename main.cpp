@@ -39,6 +39,7 @@ std::vector<std::string> users;
 int count = 0;
 int numDisplays = 8;
 static int currentTabIndex = 0; // Currently selected tab index
+bool showClose = false;
 void GetAuthLog();
 void GetSudoers();
 void DisplaySudoers();
@@ -140,7 +141,8 @@ int main(int, char**)
     
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    
+    width += 200;
+    height += 200;
     GetSudoers();
     GetAuthLog();
     groupUsers = getUsersInGroups(target_groups);
@@ -179,14 +181,12 @@ int main(int, char**)
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            ImGui::Begin("LogGui");
+            ImGui::Begin("LogGui", &showClose, ImGuiWindowFlags_NoCollapse);
             ImGui::SetWindowSize(ImVec2(width, height));
             ImGui::SetWindowPos(ImVec2(0,0));
             ImGuiSimpleTabBar();
             SwitchTabs();
             ImGui::End();
-            //DisplaySudoers();
-            //DisplayAuthLog();
         }
         //logins_window();
         //flag_window();
