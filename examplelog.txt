@@ -11,3 +11,7 @@ Feb 10 15:45:16 ubuntu-lts sshd[47339]: PAM 2 more authentication failures; logn
 Feb 10 15:45:18 ubuntu-lts sshd[47345]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=103.106.189.143  user=root
 Feb 10 15:45:21 ubuntu-lts sshd[47345]: Failed password for root from 103.106.189.143 port 35180 ssh2
 Feb 10 15:45:45 ubuntu-lts sshd[47345]: Accepted password for root from 192.168.1.100 port 1234 ssh2
+Feb 10 15:45:55 ubuntu-lts sshd[47339]: Failed password for lfry from 180.101.88.228 port 11349 ssh2
+Feb 10 15:45:56 ubuntu-lts sshd[47343]: Failed password for lfry from 103.106.189.143 port 33990 ssh2
+Feb 10 15:45:57 ubuntu-lts sshd[47339]: Failed password for lfry from 180.101.88.228 port 11349 ssh2
+Feb 10 15:45:58 ubuntu-lts sshd[47343]: Failed password for lfry from 103.106.189.143 port 33990 ssh2

@@ -4,8 +4,11 @@
 #include "logins_window.h"
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <string>
+#include <vector>
+#include <unordered_map>
 #include <algorithm>
 #include <SDL.h>
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -16,12 +19,42 @@
 
 using namespace std;
 
-void logins_window(){
+string getUsername(const string& str) {
+    istringstream iss(str);
+    string username;
+    for (int i = 0; i < 3; ++i) {
+        iss >> username;
+    }
+    iss >> username;
+    return username;
+}
+
+string getRepeatedUsers(const vector<string>& users) {
+    unordered_map<string, int> count;
+    string returnStr;
+
+    for (const string& u : users) {
+        count[u]++;
+    }
+
+    for (const auto& pair : count) {
+        if (pair.second > 3) {
+            if (!returnStr.empty()) {
+                returnStr += ", ";
+            }
+            returnStr += pair.first;
+        }
+    }
+    return returnStr;
+}
+
+void logins_window()
+{
     ifstream log;
-    //log.open("/var/log/auth.log");
+    // log.open("/var/log/auth.log");
     log.open("examplelog.txt");
     ImGui::Begin("logins window!");
-    ImGui::SetWindowSize(ImVec2(500,200));
+    ImGui::SetWindowSize(ImVec2(500, 200));
 
     int flag_count = 1;
     string month;
@@ -33,9 +66,12 @@ void logins_window(){
 
     int success_count = 0;
     int failed_count = 0;
+    vector<string> users;
 
-    if(log.is_open()){
-        while(!log.eof()){
+    if (log.is_open())
+    {
+        while (!log.eof())
+        {
             log >> month;
             log >> day;
             log >> time_stamp;
@@ -43,12 +79,17 @@ void logins_window(){
             log >> command;
             getline(log >> ws, rest_of_line);
 
-            if (rest_of_line.find("Accepted password") != string::npos) {
+            if (rest_of_line.find("Accepted password") != string::npos)
+            {
+
                 success_count++;
             }
-            else if (rest_of_line.find("Failed password") != string::npos) {
+            else if (rest_of_line.find("Failed password") != string::npos)
+            {
                 failed_count++;
-            }            
+                string user = getUsername(rest_of_line);
+                users.push_back(user);
+            }
         }
     }
 
@@ -62,14 +103,13 @@ void logins_window(){
     ImGui::Text("Total Successful Login Attempts: %i", success_count);
 
     ImGui::Text("");
-    
+
     ImGui::Text("Failures");
     ImGui::SameLine();
     ImGui::ProgressBar(static_cast<float>(failed_count) / max_val);
     ImGui::Text("Total Failed Login Attempts: %i", failed_count);
+    ImGui::Text("Users with more than 3 failed logins: %s", getRepeatedUsers(users).c_str());
 
     log.close();
     ImGui::End();
 }
-
-
