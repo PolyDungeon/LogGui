@@ -21,7 +21,7 @@ void authevents_window(){
     ifstream log;
     log.open("/var/log/auth.log");
     ImGui::Begin("Auth Events window!");
-    ImGui::SetWindowSize(ImVec2(1000,800));
+    ImGui::SetWindowSize(ImVec2(1050,800));
     int hour;
     string month;
     string day;
@@ -76,9 +76,10 @@ void authevents_window(){
         }
         int authCount = 0;
         for(int i = 0; i < 23; i++){
-      
+
             authCount+= hourCount[i];
         }
+
          ImGui::Text("Total Auth Events: %d",authCount)   ; 
           float hourCountFloat[24];
     for (int i = 0; i < 23; i++) {

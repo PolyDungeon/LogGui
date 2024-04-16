@@ -52,7 +52,7 @@ void logins_window()
 {
     ifstream log;
     // log.open("/var/log/auth.log");
-    log.open("examplelog.txt");
+    log.open("/home/lfry/Documents/CPSC4240/LogGui/examplelog.txt");
     ImGui::BeginChild("logins window!");
     //ImGui::SetWindowSize(ImVec2(500,200));
 
@@ -108,6 +108,7 @@ void logins_window()
     ImGui::SameLine();
     ImGui::ProgressBar(static_cast<float>(failed_count) / max_val);
     ImGui::Text("Total Failed Login Attempts: %i", failed_count);
+    ImGui::Text("");
     ImGui::Text("Users with more than 3 failed logins: %s", getRepeatedUsers(users).c_str());
 
     log.close();

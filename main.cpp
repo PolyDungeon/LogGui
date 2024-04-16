@@ -12,6 +12,7 @@
 #include "imgui/backends/imgui_impl_opengl3.h"
 #include "flag_window.h"
 #include "logins_window.h"
+#include "authevents_window.h"
 #include <stdio.h>
 #include <SDL.h>
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -28,15 +29,21 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <sstream>
+
 std::vector<std::string> users;
 int count = 0;
-int numDisplays = 4;
+int numDisplays = 5;
 static int currentTabIndex = 0; // Currently selected tab index
 void GetAuthLog();
 void GetSudoers();
 void DisplaySudoers();
 void DisplayAuthLog();
 void ImGuiSimpleTabBar();
+void DisplayHome();
 void SwitchTabs();
 int width = 1280;
 int height = 720;
@@ -130,7 +137,7 @@ int main(int, char**)
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     
-    GetSudoers();
+    //GetSudoers();
     GetAuthLog();
     //ImGui::SetNextWindowSize(ImVec2(window.width(), height));
     // Main loop
@@ -213,7 +220,7 @@ void ImGuiSimpleTabBar() {
     return;
   }
 
-  const char* tabLabels[5] = {"Tab 1", "Tab 2", "Tab 3", "Tab 4", "Tab 5"}; // Adjust labels and array size
+  const char* tabLabels[5] = {"Home", "Sudo Commands", "Auth Events", "Logins", "Flags"}; // Adjust labels and array size
   for (int i = 0; i < numDisplays; i++) {
     const bool isSelected = (currentTabIndex == i);
     if (ImGui::TabItemButton(tabLabels[i], isSelected)) {
@@ -277,14 +284,13 @@ void DisplaySudoers()
     //ImGui::End();
 }
 
+
 struct LogEntry
 {
     std::string timestamp;
     std::string username; 
     std::string message;
 };
-
-
 
 std::vector<LogEntry> LogEntries;
 // Store recent log entries
@@ -330,7 +336,7 @@ void DisplayAuthLog()
     //ImGui::Begin("Auth Log");
 
   // Setup scrollable area
-    ImGui::BeginChild("SudoLogList", ImVec2(0, 150), false, ImGuiWindowFlags_HorizontalScrollbar);
+    ImGui::BeginChild("SudoLogList", ImVec2(0, 500), false, ImGuiWindowFlags_HorizontalScrollbar);
 
   // Display entries in reverse order
   for (int i = log_entries.size() - 1; i >= 0; i--) {
@@ -353,24 +359,37 @@ void DisplayAuthLog()
     
 }
 
+void DisplayHome() {
+    ImGui::BeginChild("Sudo");
+    ImGui::Text("Welcome to LogGui, a visual representation of your authorization log!");
+    ImGui::Text("To get started, click on one of the tabs above.");
+    ImGui::Text("The Sudo Commands tab contains information about recent sudo commands.");
+    ImGui::Text("The Auth Events tab contains information about certain authorization events in the past 24 hours.");
+    ImGui::Text("The Logins tab contains information about ssh login attempts");    
+    ImGui::Text("The Flags tab contains flags for suspicious sudoer activity.");
+    ImGui::EndChild();
+}
+
 void SwitchTabs()
 {
     //ImGui::Begin("LogGui");
     switch (currentTabIndex)
     {
     case 0:
-        DisplaySudoers();
+        //DisplaySudoers();
+        DisplayHome();
         break;
-    
     case 1:
         DisplayAuthLog();
         break;
     case 2:
-        logins_window();
+        authevents_window();
         break;
     case 3:
-        flag_window();
+        logins_window();
         break;
+    case 4:
+        flag_window();
     default:
         break;
     }
