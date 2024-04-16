@@ -53,8 +53,8 @@ void logins_window()
     ifstream log;
     // log.open("/var/log/auth.log");
     log.open("examplelog.txt");
-    ImGui::Begin("logins window!");
-    ImGui::SetWindowSize(ImVec2(500, 200));
+    ImGui::BeginChild("logins window!");
+    //ImGui::SetWindowSize(ImVec2(500,200));
 
     int flag_count = 1;
     string month;
@@ -111,5 +111,5 @@ void logins_window()
     ImGui::Text("Users with more than 3 failed logins: %s", getRepeatedUsers(users).c_str());
 
     log.close();
-    ImGui::End();
+    ImGui::EndChild();
 }
