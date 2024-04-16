@@ -20,7 +20,7 @@ using namespace std;
 void authevents_window(){
     ifstream log;
     log.open("/var/log/auth.log");
-    ImGui::Begin("Auth Events window!");
+    ImGui::BeginChild("Auth Events window!");
     ImGui::SetWindowSize(ImVec2(1050,800));
     int hour;
     string month;
@@ -58,7 +58,7 @@ void authevents_window(){
                 string afterCommand;
                 if(suPos != string::npos){
                     size_t startPos = suPos+3;
-                    while(startPos < rest_of_line.size() & isspace(rest_of_line[startPos])){
+                    while(startPos < rest_of_line.size() && isspace(rest_of_line[startPos])){
                             startPos++;
                     }
                     afterCommand = rest_of_line.substr(startPos);
@@ -94,5 +94,5 @@ void authevents_window(){
     }
     log.close();
     
-    ImGui::End();
+    ImGui::EndChild();
 }

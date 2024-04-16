@@ -52,7 +52,7 @@ void logins_window()
 {
     ifstream log;
     // log.open("/var/log/auth.log");
-    log.open("/home/lfry/Documents/CPSC4240/LogGui/examplelog.txt");
+    log.open("/home/dhcopel/Documents/CPSC4240/LogGui/examplelog.txt");
     ImGui::BeginChild("logins window!");
     //ImGui::SetWindowSize(ImVec2(500,200));
 

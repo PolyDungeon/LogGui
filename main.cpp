@@ -13,6 +13,7 @@
 #include "flag_window.h"
 #include "logins_window.h"
 #include "authevents_window.h"
+#include "userAuth_windows.h"
 #include <stdio.h>
 #include <SDL.h>
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -36,7 +37,7 @@
 
 std::vector<std::string> users;
 int count = 0;
-int numDisplays = 5;
+int numDisplays = 8;
 static int currentTabIndex = 0; // Currently selected tab index
 void GetAuthLog();
 void GetSudoers();
@@ -47,6 +48,9 @@ void DisplayHome();
 void SwitchTabs();
 int width = 1280;
 int height = 720;
+std::vector<std::string> target_groups = {"adm", "root", "sudo"};
+std::vector<std::string> groupUsers;
+std::vector<std::string> usernames;
 // Main code
 int main(int, char**)
 {
@@ -137,8 +141,10 @@ int main(int, char**)
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     
-    //GetSudoers();
+    GetSudoers();
     GetAuthLog();
+    groupUsers = getUsersInGroups(target_groups);
+    usernames = getUsernames();
     //ImGui::SetNextWindowSize(ImVec2(window.width(), height));
     // Main loop
     bool done = false;
@@ -220,7 +226,7 @@ void ImGuiSimpleTabBar() {
     return;
   }
 
-  const char* tabLabels[5] = {"Home", "Sudo Commands", "Auth Events", "Logins", "Flags"}; // Adjust labels and array size
+  const char* tabLabels[8] = {"Home", "Sudo Commands", "Auth Events", "Logins", "Flags", "All Users", "Root Users", "Sudoers"}; // Adjust labels and array size
   for (int i = 0; i < numDisplays; i++) {
     const bool isSelected = (currentTabIndex == i);
     if (ImGui::TabItemButton(tabLabels[i], isSelected)) {
@@ -376,7 +382,6 @@ void SwitchTabs()
     switch (currentTabIndex)
     {
     case 0:
-        //DisplaySudoers();
         DisplayHome();
         break;
     case 1:
@@ -390,6 +395,14 @@ void SwitchTabs()
         break;
     case 4:
         flag_window();
+    case 5:
+        DisplayUsers(usernames);
+    break;
+    case 6:
+        DisplayGroups(groupUsers);
+        break;
+    case 7:
+        DisplaySudoers();
     default:
         break;
     }
