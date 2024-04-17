@@ -15,11 +15,13 @@ LogGui is largely built using Ocornut's "ImGui" credit to him where it is due: h
 ## How to Build
 ### Linux and similar Unixes
 
-Use our Makefile or directly:
+Use our Makefile 
+- access location of file using terminal and simply run: "Make all"
+Will likely need to update you path scripts inside the makefile to fit your system 
+or directly:
 ```
 c++ `sdl2-config --cflags` -I .. -I ../.. -I ../../backends
   main.cpp ../../backends/imgui_impl_sdl2.cpp ../../backends/imgui_impl_opengl3.cpp ../../imgui*.cpp
   `sdl2-config --libs` -lGL -ldl
-in terminal run: "Make all"z
-Will potentailly need to update you path scripts inside the makefile
 ```
+
