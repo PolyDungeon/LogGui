@@ -18,10 +18,21 @@ LogGui is largely built using Ocornut's "ImGui" credit to him where it is due: h
 Use our Makefile 
 - access location of file using terminal and simply run: "Make all"
 Will likely need to update you path scripts inside the makefile to fit your system 
+
 or directly:
+
 ```
 c++ `sdl2-config --cflags` -I .. -I ../.. -I ../../backends
   main.cpp ../../backends/imgui_impl_sdl2.cpp ../../backends/imgui_impl_opengl3.cpp ../../imgui*.cpp
   `sdl2-config --libs` -lGL -ldl
 ```
+# Images
+
+![LogGui6](https://github.com/PolyDungeon/LogGui/assets/114162108/aa68bebf-2c08-479d-b4a2-14983ab764c9)
+![LogGui5](https://github.com/PolyDungeon/LogGui/assets/114162108/5b53f884-2085-471e-90a0-b4effd88cf28)
+![LogGui4](https://github.com/PolyDungeon/LogGui/assets/114162108/adbb81aa-2943-4a6d-bafb-c862a4adc9d9)
+![LogGui3](https://github.com/PolyDungeon/LogGui/assets/114162108/2a761d96-5939-4996-bc2d-6a0d0869077e)
+![LogGui2](https://github.com/PolyDungeon/LogGui/assets/114162108/e6a15095-3f62-41fd-92b0-d379ead21c25)
+![LogGui1](https://github.com/PolyDungeon/LogGui/assets/114162108/a7b697b6-412d-4e16-a638-5b090c53c8f8)
+
 
