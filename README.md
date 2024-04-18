@@ -9,7 +9,7 @@ The auth log is difficult to fully read and understand by hand. Even though it i
 In order to ease the process of reading log files, and to ensure that administrators have easy access to the important information, we identified various types of log file entries to monitor. The metrics we chose are: Authorization events such as signing in as a different user, attempting to use sudo, or changing a users password, Login events and whether they were successful, as well as implementing a system that detects if flags events based on criteria that makes the action appear suspicious, such as the action taking place outside of normal business operating hours. We feel that these metrics offer system administrators an easier alternative to finding logs that may interest them as opposed to manually combing through the log file searching for suspicious activity. Additionally, we provide several visuals to allow the user to more easily interpret the information presented. 
 
 ## Credit:
-LogGui was created as part of a class projecct by Hayden Copeland, Holly Ammell, Lindsey Fry, and Parker Hundley.
+LogGui was created as part of a class projecct by Hayden Copeland, Holly Amell, Lindsey Fry, and Parker Hundley.
 LogGui is largely built using Ocornut's "ImGui" credit to him where it is due: https://github.com/ocornut/imgui 
 
 ## How to Build
